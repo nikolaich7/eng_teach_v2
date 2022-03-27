@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+
+{% block title %} {{ object.word }} {% endblock title %}
+
+
+{% block content %}
+<div class="row justify-content-md-center py-4 gy-4">
+
+
+    <h2 class="col-auto {% if danger %} text-danger border border-dark {% endif %}">
+        {{ object.word }}
+    </h2>
+
+
+    <div class="" id="accordionExample">
+        <div class="">
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                 data-bs-parent="#accordionExample">
+                <div class="">
+
+
+                    <h2 class="d-grid" id="headingOne">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo"
+                                aria-expanded="true" aria-controls="collapseTwo, collapseFour">
+                            подсказка
+                        </button>
+                    </h2>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                 data-bs-parent="#accordionExample">
+                <div class="">
+
+
+                    <h2 class="d-grid" id="headingOne">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree"
+                                aria-expanded="true" aria-controls="collapseThree">
+                            Еще подсказка
+                        </button>
+                    </h2>
+                    <p class="text-center">{{ object.quote_set.last.quote }}</p>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="">
+
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                 data-bs-parent="#accordionExample">
+                <div class="">
+
+
+                    <h2 class="d-grid" id="headingOne">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour"
+                                aria-expanded="true" aria-controls="collapseFour">
+                            ответ
+                        </button>
+                    </h2>
+                    <p class="text-center">{{ object.quote_set.last.translation }}</p>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+
+            <div id="collapseFour" class="collapse" aria-labelledby="headingThree"
+                 data-bs-parent="#accordionExample">
+                <div class="">
+
+                    <form action="{% url 'choice' %}" method="post">
+                        {% csrf_token %}
+                        <h2 class="d-grid" id="headingOne">
+                            <button name="pk" value="{{ object.pk }}" class="btn btn-primary" type="submit">
+                                Продолжить
+                            </button>
+                            <p class="text-center">{{ object.translation }}</p>
+                        </h2>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="collapseFour" class="collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+    <form action="{% url 'choice' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Ответ" autofocus autocomplete="off"
+                   name="answer">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2"
+            name="pk" value="{{ object.pk }}">Проверить</button>
+        </div>
+
+    </form>
+</div>
+{% endblock content %}

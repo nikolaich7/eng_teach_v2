@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block title %} {{ object.word }} {% endblock title %}
+
+
+{% block content %}
+<div class="row justify-content-md-center py-4 gy-4">
+
+
+    <div class="col-auto">
+        <h2 {% if mistake %} class = "text-danger border border-dark" {% endif %}>{{ object.translation }}</h2>
+    </div>
+
+    <form action="{% url 'choice' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Ответ" autofocus autocomplete="off"
+                   name="answer">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2"
+                    name="pk" value="{{ object.pk }}">Проверить
+            </button>
+        </div>
+
+    </form>
+
+    {% if last_answer %}
+<p>Ваш прошлый ответ: "{{ last_answer }}"</p>
+    {% endif %}
+</div>
+{% endblock content %}

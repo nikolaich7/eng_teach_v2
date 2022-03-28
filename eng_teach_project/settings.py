@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'word.apps.WordConfig',
     'quote.apps.QuoteConfig',
+    'tenses.apps.TensesConfig',
 ]
 
 MIDDLEWARE = [

@@ -3,6 +3,6 @@ from .models import Quote
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
-    list_display = ['quote', 'translation']
-    list_display_links = ['quote', 'translation']
+    list_display = ['id', 'quote', 'translation']
+    list_display_links = ['id', 'quote', 'translation']
     search_fields = ['quote', 'translation']

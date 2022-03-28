@@ -3,3 +3,6 @@ db.sqlite3
 media/
 **/__pycache__
 static/
+speech.py
+text.txt
+sample.mp3

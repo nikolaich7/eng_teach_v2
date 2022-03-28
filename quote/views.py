@@ -3,17 +3,18 @@ import random
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import DetailView
-from word.models import Word_en
+from word.models import Word
+from .models import Quote
 
 
 class RunTrainingQuote(DetailView):
-    model = Word_en
+    model = Word
     template_name = 'run_training_quote.html'
 
 
 def choice_word(request):
     req = request.POST
-    check_obj = Word_en.objects.get(pk=req['pk'])
+    check_obj = Word.objects.get(pk=req['pk'])
     context = {}
     if 'answer' in req:
         alt = check_obj.translation.split(', ')
@@ -36,18 +37,19 @@ def choice_word(request):
     else:
         context['object'] = get_next_word(check_obj)
         context['danger'] = False
-
+    with open("text.txt", "w") as file:
+        file.write(context['object'].word)
     return render(request, 'run_training_quote.html', context)
 
 def get_next_word(last_word):
-    rand = random.randint(0, 3)
+    rand = random.randint(1, 3)
     word = get_random3(rand)
     while word == last_word:
         word = get_random3(rand)
     return word
 
 def get_random3(count):
-    max_id = 34
+    max_id = 68
     word = get_random1(max_id)
     for i in range(count):
         temp = get_random1(max_id)
@@ -58,7 +60,21 @@ def get_random3(count):
 def get_random1(max_id):
     while True:
         pk = random.randint(1, max_id)
-        word = Word_en.objects.filter(pk=pk).first()
+        word = Word.objects.filter(pk=pk).first()
         if word:
             return word
 
+
+
+def choice_quote(request):
+    req = request.POST['pk']
+    print(Quote.objects.get(pk=req).quote)
+    rand_pk = random.randint(14, 31)
+    context = {
+        'object': Quote.objects.filter(pk=rand_pk).first(),
+        'danger': False,
+    }
+
+    with open("text.txt", "w") as file:
+        file.write(context['object'].quote)
+    return render(request, 'run_training_for_quote.html', context)

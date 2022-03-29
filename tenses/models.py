@@ -43,6 +43,8 @@ class Profile(models.Model):
     total_answers = models.IntegerField(default=0, verbose_name='ответов всего')
     right_answers = models.IntegerField(default=0, verbose_name='правильных ответов')
     wrong_answers = models.IntegerField(default=0, verbose_name='неправильные ответы')
+    history = models.JSONField(null=True, verbose_name='история')
+    current_date = models.CharField(max_length=10, null=True)
 
     def __str__(self):
         return 'данные ' + self.user.username

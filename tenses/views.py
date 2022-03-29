@@ -1,4 +1,5 @@
 import random
+import time
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -20,10 +21,11 @@ def training_tenses_ru_en(request):
         else:
             user.profile.wrong_answers += 1
             print(last_obj.text)
+        update_history(1)
     else:
         last_answer = user.profile.last_example.text.strip() == user.profile.last_answer
 
-    rand_pk = random.randint(1, 95)
+    rand_pk = random.randint(1, 152)
     example = Example.objects.get(pk=rand_pk)
     while example == user.profile.now_example:
         rand_pk = random.randint(1, 95)
@@ -55,4 +57,23 @@ def read_txt(request):
 
 
 def home(request):
+    update_history(1)
     return render(request, 'home.html')
+
+
+def update_history(user_pk):
+    user = User.objects.get(pk=user_pk)
+    time_str = time.strftime('%Y-%m-%d')
+    if not time_str in user.profile.history:
+        user.profile.total_answers = 0
+        user.profile.right_answers = 0
+        user.profile.wrong_answers = 0
+        user.profile.history.update({time_str: {'total': 0, 'right': 0, 'wrong': 0}})
+        user.profile.save()
+    else:
+        user.profile.history.update({time_str: {'total': user.profile.total_answers,
+                                                'right': user.profile.right_answers,
+                                                'wrong': user.profile.wrong_answers
+                                                }})
+        user.profile.save()
+    return HttpResponse('done')

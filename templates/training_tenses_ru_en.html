@@ -5,27 +5,50 @@
 
 
 {% block content %}
-<div class="row justify-content-md-center py-4 gy-4">
+<div class="row justify-content-md-center py-4 gy-4 bg-light">
 
 
-    <div class="col-auto">
-        <h2 {% if mistake %} class = "text-danger border border-dark" {% endif %}>{{ object.translation }}</h2>
-    </div>
+    <h2 class="col-auto">{{ user.profile.now_example.translation }}</h2>
 
-    <form action="{% url 'choice' %}" method="post">
+
+    <form action="{% url 'run' %}" method="post">
         {% csrf_token %}
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Ответ" autofocus autocomplete="off"
                    name="answer">
             <button class="btn btn-outline-secondary" type="submit" id="button-addon2"
-                    name="pk" value="{{ object.pk }}">Проверить
+                    name="user_pk" value="{{ user.pk }}">Проверить
             </button>
-        </div>
 
     </form>
+</div>
 
-    {% if last_answer %}
-<p>Ваш прошлый ответ: "{{ last_answer }}"</p>
-    {% endif %}
+
+<h3 class="text-success col-auto
+        {% if last_answer %}col-auto border border-dark rounded-circle {% endif %}
+">
+    {{ user.profile.right_answers }}
+</h3>
+<h3 class="col-auto text-primary">/</h3>
+<h3 class="text-danger col-auto
+{% if not last_answer %}col-auto border border-dark rounded-circle {% endif %}
+">{{ user.profile.wrong_answers }}
+</h3>
+
+
+<div class="row">
+    <div class="col-6">
+    <p>В прошлый раз был вопрос:</p>
+    <p>Вы ответили:</p>
+    <p>Правильный ответ был:</p>
+    </div>
+    <div class="col-6">
+        <p>{{ user.profile.last_example.translation }}</p>
+        <p>{{ user.profile.last_answer }}</p>
+        <p>{{ user.profile.last_example.text }}</p>
+    </div>
+</div>
+
+
 </div>
 {% endblock content %}

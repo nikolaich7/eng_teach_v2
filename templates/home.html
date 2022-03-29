@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+
+{% block title %} {{ object.word }} {% endblock title %}
+
+
+{% block content %}
+<div class="row justify-content-md-center py-4 gy-4">
+
+
+<form action="{% url 'run' %}" method="post">
+    {% csrf_token %}
+
+
+    <h2 class="d-grid" id="headingOne">
+
+        <p class="text-center">Привет, {{ user.get_short_name }}</p>
+
+        <button name="user_pk" value="{{ user.pk }}" class="btn btn-primary" type="submit">
+            Начать тренировку
+        </button>
+    </h2>
+    <p>
+        Вы ответили
+        {{ user.profile.total_answers }} раз:
+        {{ user.profile.right_answers }} раз правильно,
+        {{ user.profile.wrong_answers }} раз ошиблись
+    </p>
+
+</form>
+
+
+</div>
+{% endblock content %}

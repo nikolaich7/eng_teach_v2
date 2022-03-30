@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+
+{% block title %} {{ object.word }} {% endblock title %}
+
+
+{% block content %}
+<div class="row justify-content-md-center py-4 gy-4 bg-light">
+
+
+    <h2 class="col-auto">{{ word.translation }}</h2>
+
+
+    <form action="{% url 'training_word' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Ответ" autofocus autocomplete="off"
+                   name="answer">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2"
+                    name="data" value="{{ data }}">Проверить
+            </button>
+
+    </form>
+</div>
+
+<pre>
+                        {{ right_answer }}
+                Ваш ответ был: {{ last_answer }}
+             Правильный ответ: {{ last_question.word }}
+</pre>
+<!--
+<h3 class="text-success col-auto
+        {% if last_answer %}col-auto border border-dark rounded-circle {% endif %}
+">
+    {{ user.profile.right_answers }}
+</h3>
+<h3 class="col-auto text-primary">/</h3>
+<h3 class="text-danger col-auto
+{% if not last_answer %}col-auto border border-dark rounded-circle {% endif %}
+">{{ user.profile.wrong_answers }}
+</h3>
+
+
+<div class="row">
+    <div class="col-6">
+    <p>В прошлый раз был вопрос:</p>
+    <p>Вы ответили:</p>
+    <p>Правильный ответ был:</p>
+    </div>
+    <div class="col-6">
+        <p>{{ user.profile.last_example.translation }}</p>
+        <p>{{ user.profile.last_answer }}</p>
+        <p>{{ user.profile.last_example.text }}</p>
+    </div>
+</div>
+-->
+
+</div>
+{% endblock content %}

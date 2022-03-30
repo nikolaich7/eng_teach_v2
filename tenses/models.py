@@ -53,3 +53,19 @@ class Profile(models.Model):
         verbose_name = 'данные пользователя'
         verbose_name_plural = 'данные пользователей'
         ordering = ['-id']
+
+
+class Word(models.Model):
+    word = models.CharField(unique=True, max_length=100, verbose_name='слово')
+    translation = models.CharField(max_length=100, verbose_name='перевод')
+
+    def __str__(self):
+        return self.word
+
+    class Meta:
+        verbose_name = 'слово'
+        verbose_name_plural = 'слова'
+        ordering = ['-id']
+
+    def get_absolute_url(self):
+        return reverse('run', kwargs={'pk': self.pk})

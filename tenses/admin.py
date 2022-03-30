@@ -18,3 +18,11 @@ class ExampleAdmin(admin.ModelAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'total_answers', 'right_answers', 'wrong_answers']
+
+
+@admin.register(Word)
+class WordAdmin(admin.ModelAdmin):
+    list_display = ['id', 'word', 'translation']
+    list_display_links = ['id']
+    search_fields = ['text', 'translation']
+    list_editable = ['word', 'translation']

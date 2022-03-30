@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 
 {% block title %} {{ object.word }} {% endblock title %}
@@ -31,4 +32,6 @@
 
 
 </div>
+<audio controls autoplay src="{% static '1.mp3' %}"><audio>
+
 {% endblock content %}

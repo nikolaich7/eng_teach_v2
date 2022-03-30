@@ -20,6 +20,7 @@ class Example(models.Model):
     text = models.TextField(unique=True, max_length=200, verbose_name='Предложение')
     translation = models.TextField(max_length=200, verbose_name='Перевод')
     tense = models.ForeignKey(Tense, on_delete=models.CASCADE)
+    pronunciation = models.FileField(upload_to='audio/examples/%Y/%m/%d/', null=True)
 
     def __str__(self):
         return self.text
@@ -35,16 +36,16 @@ class Example(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='пользователь')
-    last_example = models.OneToOneField(Example, null=True, verbose_name='последний вопрос', on_delete=models.CASCADE,
-                                        related_name='lastexample')
-    last_answer = models.TextField(default='', verbose_name='последний ответ')
-    now_example = models.OneToOneField(Example, null=True, verbose_name='текущий вопроc', on_delete=models.CASCADE,
-                                       related_name='noweample')
-    total_answers = models.IntegerField(default=0, verbose_name='ответов всего')
-    right_answers = models.IntegerField(default=0, verbose_name='правильных ответов')
-    wrong_answers = models.IntegerField(default=0, verbose_name='неправильные ответы')
     history = models.JSONField(null=True, verbose_name='история')
-    current_date = models.CharField(max_length=10, null=True)
+    last_example = models.OneToOneField(Example, null=True, verbose_name='последний вопрос', on_delete=models.CASCADE,
+                                        related_name='lastexample') # не используется
+    last_answer = models.TextField(default='', verbose_name='последний ответ') # не используется
+    now_example = models.OneToOneField(Example, null=True, verbose_name='текущий вопроc', on_delete=models.CASCADE,
+                                       related_name='noweample') # не используется
+    total_answers = models.IntegerField(default=0, verbose_name='ответов всего') # не используется
+    right_answers = models.IntegerField(default=0, verbose_name='правильных ответов') # не используется
+    wrong_answers = models.IntegerField(default=0, verbose_name='неправильные ответы') # не используется
+    current_date = models.CharField(max_length=10, null=True) # не используется
 
     def __str__(self):
         return 'данные ' + self.user.username

@@ -8,6 +8,11 @@ from django.shortcuts import render
 from .models import Example, Tense, Word
 
 
+def home(request):
+    update_history(1)
+    return render(request, 'home.html')
+
+
 def training_tenses_ru_en(request):
     req = request.POST
     print(req)
@@ -39,10 +44,9 @@ def training_tenses_ru_en(request):
         file.write(user.profile.now_example.text)
     return render(request, 'training_tenses_ru_en.html', {'last_answer': last_answer})
 
+def training_audio(request):
+    pass
 
-def home(request):
-    update_history(1)
-    return render(request, 'home.html')
 
 
 def update_history(user_pk):
@@ -92,42 +96,3 @@ def training_word(request):
     return render(request, 'training_word.html', context)
 
 
-'''
-Чтение файлов для заполнения таблиц
-'''
-
-
-def read_txt(request):
-    value = ''
-    i = 0
-    dict_ex = {}
-    with open("1.txt", "r") as file1:
-        for line in file1:
-            if not line.strip():
-                print('Пустпя строка')
-                break
-            if i%2 == 0:
-                value = line
-            else:
-                dict_ex[line.strip()] = value.strip()
-            i += 1
-    for en, ru in dict_ex.items():
-        e = Example(text=en, translation=ru, tense=Tense.objects.get(id=1))
-        e.save()
-    return HttpResponse('done')
-
-
-def read_txt2(request):
-    dict_ex = {}
-    with open("1.txt", "r") as file1:
-        for line in file1:
-            if not line.strip():
-                print('Пустпя строка')
-                break
-            key, value = line.split('–')
-            dict_ex[key.strip()] = value.strip()
-    for en, ru in dict_ex.items():
-        e = Word(word=en, translation=ru)
-        e.save()
-
-    return HttpResponse('done')

@@ -37,15 +37,13 @@ class Example(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='пользователь')
     history = models.JSONField(null=True, verbose_name='история')
-    last_example = models.OneToOneField(Example, null=True, verbose_name='последний вопрос', on_delete=models.CASCADE,
-                                        related_name='lastexample') # не используется
-    last_answer = models.TextField(default='', verbose_name='последний ответ') # не используется
-    now_example = models.OneToOneField(Example, null=True, verbose_name='текущий вопроc', on_delete=models.CASCADE,
-                                       related_name='noweample') # не используется
-    total_answers = models.IntegerField(default=0, verbose_name='ответов всего') # не используется
-    right_answers = models.IntegerField(default=0, verbose_name='правильных ответов') # не используется
-    wrong_answers = models.IntegerField(default=0, verbose_name='неправильные ответы') # не используется
-    current_date = models.CharField(max_length=10, null=True) # не используется
+    history_word = models.JSONField(null=True, verbose_name='история')
+    history_audio = models.JSONField(null=True, verbose_name='история')
+    history1 = models.JSONField(null=True, verbose_name='история')
+    history2 = models.JSONField(null=True, verbose_name='история')
+    history3 = models.JSONField(null=True, verbose_name='история')
+    history4 = models.JSONField(null=True, verbose_name='история')
+    history5 = models.JSONField(null=True, verbose_name='история')
 
     def __str__(self):
         return 'данные ' + self.user.username

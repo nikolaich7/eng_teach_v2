@@ -37,8 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'word.apps.WordConfig',
-    'quote.apps.QuoteConfig',
     'tenses.apps.TensesConfig',
 ]
 
@@ -57,7 +55,8 @@ ROOT_URLCONF = 'eng_teach_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/base'),
+                 os.path.join(BASE_DIR, 'templates/tenses'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

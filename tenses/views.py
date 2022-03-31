@@ -9,62 +9,67 @@ from .models import Example, Tense, Word
 
 
 def home(request):
-    update_history(1)
-    return render(request, 'home.html')
+    """
+    Домашняя страница
+    Направлять сюда после авторизации
+    Данные не обновляет
+    Передает user_pk
+    """
+    right_today, wrong_today = get_right_and_wrong_today(1) # Сюда подставить id юзера переданное после авторизазии
+    context = {
+        'right_today': right_today,
+        'wrong_today': wrong_today,
+    }
+    return render(request, 'home.html', context)
 
 
 def training_tenses_ru_en(request):
     req = request.POST
     print(req)
-    user = User.objects.get(pk=req['user_pk'])
+    user = User.objects.get(pk=req['user'])
+    history = user.profile.history
     if 'answer' in req:
-        user.profile.total_answers += 1
-        last_obj = user.profile.last_example = user.profile.now_example
-        answer = user.profile.last_answer = req['answer'].strip()
-        last_answer = last_obj.text.lower().strip() == answer.lower()
-        if last_answer:
-            user.profile.right_answers += 1
+        time_str = time.strftime('%Y-%m-%d')
+        question_pk = history['list_question'].pop(0)
+        last_question = Example.objects.get(pk=question_pk)
+        last_answer = req['answer'].strip()
+        if not time_str in history:
+            create_history_new_day(user.pk)
+        if last_question.text.lower() == last_answer:
+            history[time_str]['right'] += 1
+            last_answer_is_true = True
         else:
-            user.profile.wrong_answers += 1
-            print(last_obj.text)
-        update_history(1)
+            history[time_str]['wrong'] += 1
+            last_answer_is_true = False
+        if len(history['list_question']) == 0:
+            history.update({'list_question': get_list_question()})
+        question_pk = history['list_question'][0]
+        user.profile.save()
     else:
-        last_answer = user.profile.last_example.text.strip() == user.profile.last_answer
+        if 'list_question' in history and len(history['list_question']) > 0:
+            list_question = history['list_question']
+        else:
+            history.update({'list_question': get_list_question()})
+            user.profile.save()
+        question_pk = history['list_question'][0]
+        last_question = None
+        last_answer = None
+        last_answer_is_true = None
+    right_today, wrong_today = get_right_and_wrong_today(1)
+    context = {
+        'question': Example.objects.get(pk=question_pk),
+        'last_question': last_question,
+        'last_answer': last_answer,
+        'last_answer_is_true': last_answer_is_true,
+        'right_today': right_today,
+        'wrong_today': wrong_today,
+    }
 
-    rand_pk = random.randint(1, 248)
-    while 198 > rand_pk > 152:
-        rand_pk = random.randint(1, 248)
-    example = Example.objects.get(pk=rand_pk)
-    while example == user.profile.now_example:
-        rand_pk = random.randint(1, 152)
-        example = Example.objects.get(pk=rand_pk)
-    user.profile.now_example = example
-    user.profile.save()
-    with open("text.txt", "w") as file:
-        file.write(user.profile.now_example.text)
-    return render(request, 'training_tenses_ru_en.html', {'last_answer': last_answer})
+    return render(request, 'training_tenses_ru_en.html', context)
+
 
 def training_audio(request):
     pass
-
-
-
-def update_history(user_pk):
-    user = User.objects.get(pk=user_pk)
-    time_str = time.strftime('%Y-%m-%d')
-    if not time_str in user.profile.history:
-        user.profile.total_answers = 0
-        user.profile.right_answers = 0
-        user.profile.wrong_answers = 0
-        user.profile.history.update({time_str: {'total': 0, 'right': 0, 'wrong': 0}})
-        user.profile.save()
-    else:
-        user.profile.history.update({time_str: {'total': user.profile.total_answers,
-                                                'right': user.profile.right_answers,
-                                                'wrong': user.profile.wrong_answers
-                                                }})
-        user.profile.save()
-    return HttpResponse('done')
 
 
 def training_word(request):
@@ -96,3 +101,24 @@ def training_word(request):
     return render(request, 'training_word.html', context)
 
 
+def get_right_and_wrong_today(user_pk):
+    time_str = time.strftime('%Y-%m-%d')
+    history = User.objects.get(pk=user_pk).profile.history
+    if not time_str in history:
+        create_history_new_day(user_pk)
+        right, wrong = 0, 0
+    else:
+        history_today = history.get(time_str)
+        right, wrong = history_today['right'], history_today['wrong']
+    return (right, wrong)
+
+
+def create_history_new_day(user_pk):
+    profile = User.objects.get(pk=user_pk).profile
+    profile.history.update({time.strftime('%Y-%m-%d'): {'right': 0, 'wrong': 0}})
+    profile.save()
+
+
+def get_list_question():
+    list_currect_pk = [i for i in range(1, 248+1) if (152 >= i) or (i >= 198)]
+    return(random.choices(list_currect_pk, k=10))

@@ -17,7 +17,7 @@ class ExampleAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'total_answers', 'right_answers', 'wrong_answers']
+    list_display = ['user']
 
 
 @admin.register(Word)

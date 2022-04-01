@@ -18,6 +18,7 @@ class ExampleAdmin(admin.ModelAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user']
+    save_on_top = True
 
 
 @admin.register(Word)
